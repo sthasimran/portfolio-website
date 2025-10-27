@@ -1,26 +1,84 @@
 @import "tailwindcss";
+/* @import "tw-animate-css"; */
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
+/* 🌙 Dark mode variant */
+@custom-variant dark (&:is(.dark *));
 
+/* 🎨 Define theme inline (replaces tailwind.config.js) */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Primary color palette (from old config.ts) */
+  --color-primary-50: #f5f3ff;
+  --color-primary-100: #ede9fe;
+  --color-primary-200: #ddd6fe;
+  --color-primary-300: #c4b5fd;
+  --color-primary-400: #a78bfa;
+  --color-primary-500: #8b5cf6;
+  --color-primary-600: #7c3aed;
+  --color-primary-700: #6d28d9;
+  --color-primary-800: #5b21b6;
+  --color-primary-900: #4c1d95;
+
+  /* Base background/text */
+  --color-background: #f9fafb;
+  --color-foreground: #111827;
+
+  /* Example animation from config */
+  @keyframes spin-slow {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  --animate-spin-slow: spin-slow 20s linear infinite;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* 🌍 Global base resets */
+@layer base {
+  * {
+    @apply box-border border-gray-200 outline-gray-400/50;
+  }
+
+  html {
+    @apply scroll-smooth;
+  }
+
+  body {
+    @apply bg-[--color-background] text-[--color-foreground] antialiased;
+  }
+
+  #home,
+  #about,
+  #works,
+  #contact {
+    @apply min-h-screen;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* 🧰 Custom utilities */
+@layer utilities {
+  .section-container {
+    @apply px-6 py-12 md:px-12 lg:px-20 xl:px-32;
+  }
+
+  .gradient-bg {
+    background: linear-gradient(135deg, var(--color-primary-400) 0%, var(--color-primary-600) 100%);
+  }
+}
+
+/* 🎚️ Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1f2937;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary-500);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary-600);
 }
