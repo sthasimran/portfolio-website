@@ -1,7 +1,7 @@
 'use client';
 
 import About from './components/About';
-// import Contact from "./components/Contact";
+import Contact from './components/Contact';
 import Home from './components/Home';
 import Sidebar from './components/Sidebar';
 import Works from './components/Work';
@@ -15,7 +15,7 @@ export default function Page() {
         <Home />
         <About />
         <Works />
-        {/* <Contact/> */}
+        <Contact />
       </main>
     </div>
   );
