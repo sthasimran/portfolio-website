@@ -1,139 +1,156 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowRight, ExternalLink } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useState } from 'react';
+import { experiences } from '../constant/WorkExperienceData';
+import { ExperienceCard } from './Cards/ExperienceCard';
 
-const projects = [
-  {
-    id: 1,
-    title: 'Netflix Clone Website',
-    category: 'Project 1',
-    image: '/projects/netflix.jpg',
-    link: '#',
-    color: 'from-purple-400 to-blue-500',
-  },
-  {
-    id: 2,
-    title: 'Weather Reporting Website',
-    category: 'Project 2',
-    image: '/projects/weather.jpg',
-    link: '#',
-    color: 'from-pink-300 to-rose-400',
-  },
-  {
-    id: 3,
-    title: 'Aeskey Website',
-    category: 'Project 3',
-    image: '/projects/aeskey.jpg',
-    link: '#',
-    color: 'from-orange-300 to-amber-400',
-  },
-  {
-    id: 4,
-    title: 'Formula 1 Race Stats',
-    category: 'Project 4',
-    image: '/projects/formula1.jpg',
-    link: '#',
-    color: 'from-teal-300 to-cyan-400',
-  },
-];
+export default function WorkSection() {
+  const [showAllAgency, setShowAllAgency] = useState(false);
+  const [showAllInHouse, setShowAllInHouse] = useState(false);
 
-export default function Works() {
-  const [hoveredProject, setHoveredProject] = useState<number | null>(null);
+  const agencyExperiences = experiences.filter(exp => exp.category === 'agency');
+  const inHouseExperiences = experiences.filter(exp => exp.category === 'in-house');
+
+  const displayedAgency = showAllAgency ? agencyExperiences : agencyExperiences.slice(0, 4);
+  const displayedInHouse = showAllInHouse ? inHouseExperiences : inHouseExperiences.slice(0, 4);
 
   return (
-    <section id="works" className="min-h-screen bg-gray-50 py-20">
-      <div className="section-container max-w-7xl mx-auto">
+    <section id="works" className="min-h-screen bg-white py-16 md:py-24">
+      <div className=" section-container max-w-7xl mx-auto px-6 lg:px-8">
         {/* Header */}
         <motion.div
-          className="mb-12"
+          className="mb-16"
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <p className="text-sm text-gray-500 mb-2 italic">Work</p>
-          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold">RECENT PROJECT</h2>
+          <p className="text-lg font-semibold text-[#141313] mb-2 italic">Work</p>
+          <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold mb-4">MARKETING & BRANDING</h2>
+
+          <p className="ext-[#141313] font-semibold  leading-relaxed italic">
+            I have worked with multiple brands through agency and in-house roles, contributing to
+            paid advertising, digital strategy, SEO, and marketing analysis. My responsibilities
+            ranged from campaign execution to performance optimization, always aligned with brand
+            goals and measurable outcomes.
+          </p>
         </motion.div>
 
-        {/* Projects Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
-          {projects.map((project, index) => (
+        {/* Agency-Based Experience */}
+        <div className="mb-20">
+          <div className="flex items-center justify-between mb-8">
+            <motion.h3
+              className="text-2xl md:text-[35px] font-semibold text-[#141313] italic"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              AGENCY-BASED BRAND EXPERIENCE
+            </motion.h3>
+
+            {agencyExperiences.length > 4 && (
+              <motion.button
+                onClick={() => setShowAllAgency(!showAllAgency)}
+                className="hidden md:flex items-center gap-2 bg-gray-900 text-white px-6 py-3 font-medium hover:bg-gray-800 transition-colors group"
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                {showAllAgency ? 'Show less' : 'Load more'}
+                <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+              </motion.button>
+            )}
+          </div>
+
+          <p className="text-[#141313] italic mb-8 text-[18px]">
+            (Delivered as part of a digital marketing agency team)
+          </p>
+
+          {/* Agency Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+            {displayedAgency.map((experience, index) => (
+              <ExperienceCard key={experience.id} experience={experience} index={index} />
+            ))}
+          </div>
+
+          {/* Mobile Load More Button */}
+          {agencyExperiences.length > 4 && (
             <motion.div
-              key={project.id}
-              className="group cursor-pointer"
-              initial={{ opacity: 0, y: 30 }}
+              className="flex justify-center mt-8 md:hidden"
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              onMouseEnter={() => setHoveredProject(project.id)}
-              onMouseLeave={() => setHoveredProject(null)}
+              transition={{ duration: 0.6 }}
             >
-              {/* Category Label */}
-              <p className="text-sm text-gray-500 mb-3 italic">{project.category}</p>
-
-              {/* Project Card */}
-              <div className="relative overflow-hidden rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-shadow duration-300">
-                {/* Image Container */}
-                <div className="relative h-64 md:h-72 lg:h-80 overflow-hidden">
-                  <div
-                    className={`absolute inset-0 bg-linear-to-br ${project.color} transition-transform duration-500 ${
-                      hoveredProject === project.id ? 'scale-110' : 'scale-100'
-                    }`}
-                  >
-                    {/* Placeholder for project image */}
-                    <div className="w-full h-full flex items-center justify-center">
-                      <span className="text-white/30 text-lg font-semibold">{project.title}</span>
-                    </div>
-                  </div>
-
-                  {/* Overlay on Hover */}
-                  <motion.div
-                    className="absolute inset-0 bg-black/40 flex items-center justify-center"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: hoveredProject === project.id ? 1 : 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <ExternalLink className="text-white" size={32} />
-                  </motion.div>
-                </div>
-
-                {/* Project Info */}
-                <div className="p-6">
-                  <h3 className="text-xl md:text-2xl font-bold text-gray-900 mb-3 group-hover:text-indigo-600 transition-colors">
-                    {project.title}
-                  </h3>
-
-                  <motion.div
-                    className="flex items-center gap-2 text-gray-600 group-hover:text-indigo-600 transition-colors"
-                    animate={{
-                      x: hoveredProject === project.id ? 5 : 0,
-                    }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    <ArrowRight size={20} />
-                    <span className="text-sm font-medium">View Project</span>
-                  </motion.div>
-                </div>
-              </div>
+              <button
+                onClick={() => setShowAllAgency(!showAllAgency)}
+                className="flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors group"
+              >
+                {showAllAgency ? 'Show less' : 'Load more'}
+                <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+              </button>
             </motion.div>
-          ))}
+          )}
         </div>
 
-        {/* Load More Button */}
-        <motion.div
-          className="flex justify-center mt-12"
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.4 }}
-        >
-          <button className="bg-gray-900 text-white px-8 py-4 rounded-lg font-medium flex items-center gap-2 hover:bg-gray-800 transition-colors group">
-            Load more
-            <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
-          </button>
-        </motion.div>
+        {/* In-House Experience */}
+        <div>
+          <div className="flex items-center justify-between mb-8">
+            <motion.h3
+              className="text-2xl md:text-[35px] font-semibold text-[#141313] italic"
+              initial={{ opacity: 0, x: -20 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              IN-HOUSE BRAND EXPERIENCE
+            </motion.h3>
+
+            {inHouseExperiences.length > 4 && (
+              <motion.button
+                onClick={() => setShowAllInHouse(!showAllInHouse)}
+                className="hidden md:flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors group"
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.6 }}
+              >
+                {showAllInHouse ? 'Show less' : 'Load more'}
+                <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+              </motion.button>
+            )}
+          </div>
+
+          {/* In-House Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 lg:gap-12">
+            {displayedInHouse.map((experience, index) => (
+              <ExperienceCard key={experience.id} experience={experience} index={index} />
+            ))}
+          </div>
+
+          {/* Mobile Load More Button */}
+          {inHouseExperiences.length > 4 && (
+            <motion.div
+              className="flex justify-center mt-8 md:hidden"
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+            >
+              <button
+                onClick={() => setShowAllInHouse(!showAllInHouse)}
+                className="flex items-center gap-2 bg-gray-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-gray-800 transition-colors group"
+              >
+                {showAllInHouse ? 'Show less' : 'Load more'}
+                <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+              </button>
+            </motion.div>
+          )}
+        </div>
       </div>
     </section>
   );

@@ -3,8 +3,10 @@
 import About from './components/About';
 import Contact from './components/Contact';
 import Home from './components/Home';
+import Projects from './components/Projects';
 import Sidebar from './components/Sidebar';
-import Works from './components/Work';
+import SkillsSection from './components/Skills';
+import WorkSection from './components/Work';
 
 export default function Page() {
   return (
@@ -14,7 +16,9 @@ export default function Page() {
       <main className="md:ml-40">
         <Home />
         <About />
-        <Works />
+        <WorkSection />
+        <Projects />
+        <SkillsSection />
         <Contact />
       </main>
     </div>

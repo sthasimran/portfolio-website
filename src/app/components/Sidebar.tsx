@@ -1,136 +1,166 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Instagram, Linkedin, Menu, X } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
+import { navItems, socialLinks } from '../constant/SidebarContent';
+import Image from 'next/image';
 
-const navItems = [
-  { id: 'home', label: 'HOME', href: '#home' },
-  { id: 'about', label: 'ABOUT', href: '#about' },
-  { id: 'works', label: 'WORKS', href: '#works' },
-  { id: 'contact', label: 'CONTACT', href: '#contact' },
-];
+type NavListProps = {
+  variant: 'mobile' | 'desktop';
+  activeSection: string;
+  onNavClick: (href: string, id: string) => void;
+};
 
-const socialLinks = [
-  { name: 'Email', icon: Mail, url: 'mailto:batsalr0@gmail.com' },
-  { name: 'Instagram', icon: Instagram, url: 'https://instagram.com' },
-  { name: 'LinkedIn', icon: Linkedin, url: 'https://linkedin.com' },
-];
+type SocialIconsProps = {
+  className?: string;
+};
+
+const NavList = ({ variant, activeSection, onNavClick }: NavListProps) => (
+  <nav className={variant === 'desktop' ? 'flex-1 px-6 py-8' : 'flex-1 px-6 py-6'}>
+    <ul className="space-y-6">
+      {navItems.map(item => {
+        const isActive = activeSection === item.id;
+
+        return (
+          <li key={item.id}>
+            <button
+              onClick={() => onNavClick(item.href, item.id)}
+              className={`relative text-left w-full origin-left will-change-transform
+                   transition-all duration-300 ease-out
+                  ${isActive ? 'text-white scale-160 font-semibold tracking-wide' : 'text-gray-400 scale-100'}
+                `}
+            >
+              {item.label}
+            </button>
+          </li>
+        );
+      })}
+    </ul>
+  </nav>
+);
+
+const SocialIcons = ({ className = '' }: SocialIconsProps) => (
+  <div className={`p-6 flex flex-wrap gap-4 ${className}`}>
+    {socialLinks.map(s => (
+      <a
+        key={s.name}
+        href={s.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-800 hover:bg-indigo-600 transition"
+        aria-label={s.name}
+      >
+        <s.icon size={20} />
+      </a>
+    ))}
+  </div>
+);
 
 export default function Sidebar() {
   const [activeSection, setActiveSection] = useState('home');
   const [isOpen, setIsOpen] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
+
+  useEffect(() => {
+    const update = () => setIsDesktop(window.matchMedia('(min-width: 1024px)').matches);
+    update();
+    window.addEventListener('resize', update);
+    return () => window.removeEventListener('resize', update);
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = navItems.map(item => document.getElementById(item.id));
-      const scrollPosition = window.scrollY + 200;
+      const y = window.scrollY + (isDesktop ? 120 : 80);
 
-      sections.forEach(section => {
-        if (section) {
-          const { offsetTop, offsetHeight } = section;
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(section.id);
-          }
+      for (const item of navItems) {
+        const section = document.getElementById(item.id);
+        if (!section) continue;
+
+        if (y >= section.offsetTop && y < section.offsetTop + section.offsetHeight) {
+          setActiveSection(item.id);
+          break;
         }
-      });
+      }
     };
 
-    window.addEventListener('scroll', handleScroll);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [isDesktop]);
 
   const handleNavClick = (href: string, id: string) => {
     setActiveSection(id);
     setIsOpen(false);
-    const element = document.querySelector(href);
-    element?.scrollIntoView({ behavior: 'smooth' });
+
+    const target = document.querySelector(href) as HTMLElement | null;
+    if (!target) return;
+
+    const offset = isDesktop ? 0 : 80;
+    const top = target.getBoundingClientRect().top + window.scrollY - offset;
+    window.scrollTo({ top, behavior: 'smooth' });
   };
+
+  const showMobileShell = !isDesktop;
 
   return (
     <>
-      {/* Mobile Menu Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
-        className="fixed top-6 left-6 z-50 md:hidden bg-gray-900 text-white p-3 rounded-lg shadow-lg"
-        aria-label="Toggle menu"
-      >
-        {isOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
-
-      {/* Sidebar */}
-      <AnimatePresence>
-        {(isOpen || (typeof window !== 'undefined' && window.innerWidth >= 768)) && (
-          <motion.aside
-            initial={{ x: -300 }}
-            animate={{ x: 0 }}
-            exit={{ x: -300 }}
-            transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-            className="fixed left-0 top-0 h-screen w-64 bg-gray-900 text-white z-40 flex flex-col"
+      {/* Mobile Top Bar */}
+      {showMobileShell && (
+        <div className="fixed top-0 left-0 w-full h-16 bg-white/80 backdrop-blur-md z-50 flex items-center px-6">
+          <button
+            onClick={() => setIsOpen(prev => !prev)}
+            className="bg-gray-900 text-white p-3 rounded-lg"
           >
-            {/* Logo */}
-            <div className="p-6 md:p-8">
-              <h1 className="text-2xl md:text-xl font-bold tracking-wider">BNS</h1>
-            </div>
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </button>
+        </div>
+      )}
 
-            {/* Navigation */}
-            <nav className="flex-1 px-6 md:px-5 py-8">
-              <ul className="space-y-6">
-                {navItems.map(item => (
-                  <li key={item.id}>
-                    <button
-                      onClick={() => handleNavClick(item.href, item.id)}
-                      className={`text-left text-base md:text-sm font-medium transition-colors relative group w-full ${
-                        activeSection === item.id ? 'text-white' : 'text-gray-400'
-                      }`}
-                    >
-                      {activeSection === item.id && (
-                        <motion.span
-                          layoutId="activeSection"
-                          className="absolute -left-6 md:-left-5 top-1/2 -translate-y-1/2 w-1 h-6 bg-indigo-500 rounded-r"
-                        />
-                      )}
-                      {item.label}
-                    </button>
-                  </li>
-                ))}
-              </ul>
-            </nav>
+      {/* Mobile Sidebar */}
+      <AnimatePresence>
+        {showMobileShell && isOpen && (
+          <>
+            <motion.aside
+              initial={{ x: -260 }}
+              animate={{ x: 0 }}
+              exit={{ x: -260 }}
+              className="fixed left-0 top-0 h-full w-64 bg-gray-900 text-white z-70 flex flex-col"
+            >
+              <div className="p-6 flex justify-between items-center">
+                <h1 className="text-xl font-bold">BNS</h1>
+                <button onClick={() => setIsOpen(false)}>
+                  <X size={24} />
+                </button>
+              </div>
 
-            {/* Social Links */}
-            <div className="p-6 md:p-5 space-y-4">
-              {socialLinks.map(social => (
-                <a
-                  key={social.name}
-                  href={social.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center justify-center w-10 h-10 rounded-full bg-gray-800 hover:bg-indigo-600 transition-colors"
-                  aria-label={social.name}
-                >
-                  <social.icon size={20} />
-                </a>
-              ))}
-            </div>
+              <NavList variant="mobile" activeSection={activeSection} onNavClick={handleNavClick} />
 
-            {/* Copyright */}
-            <div className="p-6 md:p-5 text-xs text-gray-500 border-t border-gray-800">
-              <p>Copyright ©2024 Batsal Nath Shrestha. All right reserved.</p>
-            </div>
-          </motion.aside>
+              <SocialIcons className="pt-2" />
+            </motion.aside>
+
+            <motion.div
+              onClick={() => setIsOpen(false)}
+              className="fixed inset-0 bg-black/50 z-60"
+            />
+          </>
         )}
       </AnimatePresence>
 
-      {/* Overlay for mobile */}
-      {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          onClick={() => setIsOpen(false)}
-          className="fixed inset-0 bg-black/50 z-30 md:hidden"
-        />
-      )}
+      {/* Desktop Sidebar */}
+      <aside className="hidden lg:flex fixed left-0 top-0 h-screen w-64 bg-gray-900 text-white flex-col">
+        <div className="p-8">
+          <Image src="/bns.png" alt="BNS logo" width={120} height={120} />
+        </div>
+
+        <NavList variant="desktop" activeSection={activeSection} onNavClick={handleNavClick} />
+
+        <SocialIcons />
+
+        <div className="p-6 text-xs text-gray-500 border-t border-gray-800">
+          ©2024 Batsal Nath Shrestha
+        </div>
+      </aside>
     </>
   );
 }

@@ -1,7 +1,8 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { ArrowRight, Phone, Mail, Sparkles } from 'lucide-react';
+import { Phone, Mail, Sparkles, ArrowUpRight } from 'lucide-react';
+import Image from 'next/image';
 
 export default function Home() {
   const handleConnectClick = () => {
@@ -12,9 +13,10 @@ export default function Home() {
   return (
     <section
       id="home"
-      className="min-h-screen flex items-center justify-center bg-gray-50 relative overflow-hidden"
+      className="min-h-screen flex items-center justify-center relative overflow-hidden 
+  pt-24 md:pt-24 lg:pt-6"
     >
-      <div className="section-container w-full max-w-7xl mx-auto">
+      <div className="section-container w-full ml-20  mx-auto ">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           {/* Left Content */}
           <motion.div
@@ -24,16 +26,16 @@ export default function Home() {
             className="space-y-6 z-10"
           >
             <motion.h1
-              className="text-4xl md:text-5xl lg:text-6xl font-bold leading-tight"
+              className="text-4xl md:text-5xl lg:text-6xl font-medium leading-tight"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2, duration: 0.8 }}
             >
               MY NAME
               <br />
-              IS BATSAL
+              IS <span className="font-bold"> BATSAL NATH</span>
               <br />
-              SHRESTHA...
+              <span className="font-bold"> SHRESTHA...</span>
             </motion.h1>
 
             <motion.p
@@ -42,15 +44,16 @@ export default function Home() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.4, duration: 0.8 }}
             >
-              <span className="italic">Graphics Designer, UI/UX developer &</span>
+              <span className="italic font-semibold">
+                Ads Manager | Digital Strategist | Graphics Designer
+              </span>
               <br />
-              <span className="italic">Marketing Strategist</span>{' '}
-              <span className="font-normal">based in Nepal</span>
+              <span className="font-normal"> {''}based in Nepal</span>
             </motion.p>
 
             <motion.button
               onClick={handleConnectClick}
-              className="bg-gray-900 text-white px-8 py-4 rounded-lg font-medium flex items-center gap-2 hover:bg-gray-800 transition-colors group"
+              className="bg-gray-900 text-white px-8 py-4 font-medium flex items-center gap-2 cursor-pointer hover:bg-gray-800 transition-colors group"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.6, duration: 0.8 }}
@@ -58,7 +61,7 @@ export default function Home() {
               whileTap={{ scale: 0.95 }}
             >
               Connect with me
-              <ArrowRight className="group-hover:translate-x-1 transition-transform" size={20} />
+              <ArrowUpRight className="group-hover:translate-x-1 transition-transform" size={20} />
             </motion.button>
 
             {/* Contact Info */}
@@ -69,12 +72,16 @@ export default function Home() {
               transition={{ delay: 0.8, duration: 0.8 }}
             >
               <div className="flex items-center gap-2 text-gray-700">
-                <Phone size={18} />
-                <span className="text-sm md:text-base">+977 9840255823</span>
+                <div className="bg-gray-100 hover:bg-gray-200 rounded-full p-2">
+                  <Phone size={18} />
+                </div>
+                <span className="text-sm md:text-base font-semibold">+977 9840255823</span>
               </div>
               <div className="flex items-center gap-2 text-gray-700">
-                <Mail size={18} />
-                <span className="text-sm md:text-base">batsalr0@gmail.com</span>
+                <div className="bg-gray-100 hover:bg-gray-200 rounded-full p-2">
+                  <Mail size={18} />
+                </div>
+                <span className="text-sm md:text-base font-semibold">batsalr0@gmail.com</span>
               </div>
             </motion.div>
           </motion.div>
@@ -88,7 +95,7 @@ export default function Home() {
           >
             {/* Decorative Shapes */}
             <div className="absolute inset-0 flex items-center justify-center">
-              <motion.div
+              {/* <motion.div
                 className="absolute w-72 h-72 md:w-96 md:h-96 lg:w-[500px] lg:h-[500px]"
                 animate={{
                   rotate: [0, 360],
@@ -102,24 +109,24 @@ export default function Home() {
                 <div className="absolute top-0 left-0 w-32 h-32 md:w-40 md:h-40 bg-purple-400 rounded-full blur-2xl opacity-60" />
                 <div className="absolute top-10 right-0 w-40 h-40 md:w-48 md:h-48 bg-blue-400 rounded-full blur-2xl opacity-60" />
                 <div className="absolute bottom-0 left-10 w-36 h-36 md:w-44 md:h-44 bg-purple-300 rounded-full blur-2xl opacity-60" />
-              </motion.div>
+              </motion.div> */}
             </div>
 
             {/* Sparkle Icons */}
             <motion.div
-              className="absolute top-10 right-10 md:top-16 md:right-16"
+              className="absolute top-10 right-10 md:top-16 md:right-8"
               animate={{ rotate: [0, 180, 0], scale: [1, 1.2, 1] }}
               transition={{ duration: 4, repeat: Infinity }}
             >
-              <Sparkles className="text-purple-500" size={24} />
+              <Sparkles className="text-black-500" size={24} />
             </motion.div>
 
             <motion.div
-              className="absolute bottom-20 left-10 md:bottom-32 md:left-16"
+              className="absolute bottom-20 left-10 md:bottom-26 md:left-2"
               animate={{ rotate: [0, -180, 0], scale: [1, 1.3, 1] }}
               transition={{ duration: 5, repeat: Infinity }}
             >
-              <Sparkles className="text-blue-500" size={20} />
+              <Sparkles className="text-black-500" size={20} />
             </motion.div>
 
             {/* Profile Image Container */}
@@ -128,27 +135,28 @@ export default function Home() {
               whileHover={{ scale: 1.05 }}
               transition={{ duration: 0.3 }}
             >
-              <div className="absolute inset-0 bg-linear-to-br from-purple-400 via-blue-400 to-purple-300 rounded-full" />
+              <Image src={'/HeroImage.png'} alt="Batsal Nath Shrestha" width={1200} height={1200} />
+
+              {/* <div className="absolute inset-0 bg-linear-to-br from-purple-400 via-blue-400 to-purple-300 rounded-full" />
               <div className="absolute inset-2 bg-gray-50 rounded-full overflow-hidden">
-                {/* Replace with actual image */}
                 <div className="w-full h-full bg-linear-to-br from-purple-200 to-blue-200 flex items-center justify-center">
-                  <span className="text-gray-400 text-sm">Profile Image</span>
+                  <Image src={'/Batsal.png'} alt='Batsal Nath Shrestha' width={400} height={400}/>
                 </div>
-              </div>
+              </div> */}
             </motion.div>
 
             {/* Decorative Dots */}
-            <div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 grid grid-cols-3 gap-2">
+            {/* <div className="absolute bottom-8 right-8 md:bottom-12 md:right-12 grid grid-cols-3 gap-2">
               {[...Array(9)].map((_, i) => (
                 <div key={i} className="w-2 h-2 bg-gray-900 rounded-full" />
               ))}
-            </div>
+            </div> */}
           </motion.div>
         </div>
       </div>
 
       {/* Social Icons - Right Side */}
-      <motion.div
+      {/* <motion.div
         className="hidden xl:flex fixed right-8 top-1/2 -translate-y-1/2 flex-col gap-4 z-20"
         initial={{ opacity: 0, x: 50 }}
         animate={{ opacity: 1, x: 0 }}
@@ -181,7 +189,7 @@ export default function Home() {
         >
           <span className="text-xs">BE</span>
         </a>
-      </motion.div>
+      </motion.div> */}
     </section>
   );
 }
