@@ -128,7 +128,8 @@ export default function Sidebar() {
               className="fixed left-0 top-0 h-full w-64 bg-gray-900 text-white z-70 flex flex-col"
             >
               <div className="p-6 flex justify-between items-center">
-                <h1 className="text-xl font-bold">BNS</h1>
+                {/* <h1 className="text-xl font-bold">BNSsss</h1> */}
+                <Image src="/bns.png" alt="BNS logo" width={120} height={120} />
                 <button onClick={() => setIsOpen(false)}>
                   <X size={24} />
                 </button>
